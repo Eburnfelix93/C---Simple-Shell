@@ -1,74 +1,85 @@
-.TH man 1 "AUGUST 03 2022" "1.0" "ALX Simple Shell Project"
-
+.TH HSH 1 "03 AUGUST 2022" "0.1" "HSH"
 .SH NAME
-    hsh - ALX Simple Shell: command line interpreter
-
+.B hsh
+- command interpreter (simple shell)
 .SH SYNOPSIS
-hsh [filename]
-
-.SH COPYRIGHT
-    Public Domain, no copyright protection
-
+.B ./hsh
 .SH DESCRIPTION
-.B hsh
-is a basic imitation of a command line interpreter that reads and implements basic commands from user input as a shell would.
-.PP
-.B hsh
- is compiled on Ubuntu 14.04 LTS with gcc 4.8.4 (C90). It is built to run in both interactive and noninteractive mode.
-.PP
-.SH USER INPUT
-Once a user inputs a command and hits enter, the shell performs the following actions:
+The hsh shell is a command-line interpreter that provides a command line user interface for Unix-like operating systems.
+The shell is both an interactive command language and a scripting language, and is used by the operating system to control the 
+execution of the system using shell scripts.
 
-1. Splits the command into an array of words.
+.B Overview
 
-2. Looks for the command.
+The shell is a command that reads lines from either a file or 
+the terminal, interprets them, and generally executes other commands.
+It is the program that is running when a user logs into the system. The
+shell implements a language that has flow control constructs, a macro
+facility that provides a variety of features in addition to data storage,
+along with built in history and line editing capabilities. It
+incorporates many features to aid interactive use and has the advantage
+that the interpretative language is common to both interactive and non-
+interactive use (shell scripts).  That is, commands can be typed
+directly to the running shell or can be put into a file and the file
+can be executed directly by the shell.
 
-3. Executes the command.
-.PP
-.SH SEARCH FOR COMMAND
-When locating a command, the shell looks for a built-in command by that name.
-If a built-in command is not found, the shell searches for the command in the PATH.
-.PP
-.SH EXECUTE COMMAND
-Commands are executed in a child process of the main process.
-.PP
-.SH BUILTINS
-.IP help
-Call help, display shell help
-.IP exit
-Exits process and frees memory allocated.
-.IP cd
-Change directories
+.B Interactive mode
 
-.SH EXAMPLES
-Below an example of interactive mode:
+The commands are run with user-interaction from keyboard. 
+E.g. the shell can prompt the user to enter input.
 
-.RS +4
-$ ./hsh
-.RE
-.RS +4
-($) /bin/ls
-.RE
-.RS +4
-hsh main.c shell.c
-.RE
-.RS +4
+.B Non-interactive mode
+
+The shell is probably run from an automated process so it can't assume if can request input or that someone will see the output.
+E.g Maybe it is best to write output to a log-file.
+
+.B Builtins
+
+This section lists the builtin commands which are builtin because they
+need to perform some operation that can't be performed by a separate
+process.  In addition to these, there are several other commands that
+may be builtin for efficiency (e.g.  printf(1), echo(1), test(1), etc).
+
+.SH EXAMPLE
+
+($) ./hsh
+
+($) ls
+
+README.md		_print_env.c		frees.c			remove_new_line.c	utilities.c
+
+_exit.c			builtin_commands.c	main.c			shell.h
+
+_getenv.c		counters.c		man_simple_shell	signal_handler.c
+
+_open_help.c		exec.c			more_utilities.c	tokenize.c
+
 ($)
-.RE
-.RS +4
-($) exit
-.RE
-.RS +4
-$
+
+.SH EXIT STATUS
+
+Errors that are detected by the shell, such as a syntax error, will
+cause the shell to exit with a non-zero exit status.  If the shell is
+not an interactive shell, the execution of the shell file will be
+aborted.  Otherwise the shell will return the exit status of the last
+command executed, or if the exit builtin is used with a numeric
+argument, it will return the argument.
+
+.SH ENVIRONMENT
+
+.B PATH
+
+The default search path for executables.
+
+.B PWD
+
+The logical value of the current working directory.  This is set by the cd command.
+
+.SH SEE ALSO
+.I dash(1), echo(1), getopt(1), ksh(1), login(1), printf(1), test(1), getopt(3), passwd(5), environ(7), sysctl(8)
 
 .SH BUGS
-No known bugs until now.
+No known bugs.
 
-.SH AUTHORS
-.PP
-felix eburn -https://github.com/Eburnfelix93
-
-.PP
-.SH SEE ALSO
-.BR man
-.BR sh
+.SH AUTHOR
+EBURN FELIX (eburnfelixx@gmail.com)

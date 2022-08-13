@@ -1,40 +1,48 @@
-#include "simpleshell.h"
+#include "shell.h"
 
 /**
- * main - creates a prompt that reads input, sparses it, executes and waits
- * for another command unless told to exit
- * @ac: number of arguemnets
- * @av: array of arguements
- * @env: environment variable
- * Return: EXIT_SUCCESS
- */
-int main(int ac __attribute__((unused)), char **av, char **env)
+  * main - Entry point to the Shell
+  *
+  * Return: Always zero.
+  */
+int main(void)
 {
-	char *line;
-	char **args, **path;
-	int count = 0, status = 0;
-	(void) av;
-	signal(SIGINT, handle_signal);
-	while (1)
-	{
-		prompt();
-		/*read input and return string*/
-		line = read_input();
-		/*separates string to get command and atgs*/
-		args = sparse_str(line, env);
+	char *line = NULL, **u_tokns = NULL;
+	int w_len = 0, execFlag = 0;
+	size_t line_size = 0;
+	ssize_t line_len = 0;
 
-		if ((_strcmp(args[0], "\n") != 0) && (_strcmp(args[0], "env") != 0))
+	while (line_len >= 0)
+	{
+		signal(SIGINT, signal_handler);
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "($) ", 4);
+		line_len = getline(&line, &line_size, stdin);
+		if (line_len == -1)
 		{
-			count += 1;
-			path = search_path(env);
-			status = _stat(args, path);
-			child_process(av, args, env, status, count);
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1);
+			break;
 		}
-		else
+
+		w_len = count_input(line);
+		if (line[0] != '\n' && w_len > 0)
 		{
-			free(args);
+			u_tokns = tokenize(line, " \t", w_len);
+			execFlag = execBuiltInCommands(u_tokns, line);
+			if (!execFlag)
+			{
+				u_tokns[0] = find(u_tokns[0]);
+				if (u_tokns[0] && access(u_tokns[0], X_OK) == 0)
+					exec(u_tokns[0], u_tokns);
+				else
+					perror("./hsh");
+			}
+
+			frees_tokens(u_tokns);
 		}
-		free(line);
 	}
-	return (EXIT_SUCCESS);
+
+	free(line);
+	return (0);
 }
