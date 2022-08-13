@@ -39,7 +39,8 @@ void prompt(void);
 
 void *_realloc(void *ptr, unsigned int new_size);
 int _count_point(char *buffer);
-
+void _handle_exit(char **u_tokns, char *line);
+char *_getenv(const char *name);
 
 
 /*new*/
